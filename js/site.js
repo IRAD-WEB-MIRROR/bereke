@@ -46,6 +46,7 @@
 
   /* ---- hero slider: shrink to an oval, swap, grow ---- */
   var slides = $$('.slide'), thumbs = $('.hero__thumbs'), cur = 0, busy = false, timer;
+  if (slides.length && thumbs) {
   slides.forEach(function (s, i) {
     var t = document.createElement('button');
     t.type = 'button'; t.className = 'thumb'; t.setAttribute('role', 'tab');
@@ -75,13 +76,14 @@
   function restart() { clearInterval(timer); timer = setInterval(function () { go((cur + 1) % slides.length); }, 6500); }
   slides[0].classList.add('is-on'); mark(); restart();
   $('.hero__next').addEventListener('click', function () { go((cur + 1) % slides.length); });
+  }
 
   /* ---- header, progress bar ---- */
   var hdr = $('.hdr'), bar = $('.progress span');
   function onScroll() {
     var y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
-    hdr.classList.toggle('is-solid', y > 60);
-    bar.style.height = (h > 0 ? (y / h) * 100 : 0) + '%';
+    if (!hdr.hasAttribute('data-solid')) hdr.classList.toggle('is-solid', y > 60);
+    if (bar) bar.style.height = (h > 0 ? (y / h) * 100 : 0) + '%';
   }
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
@@ -114,11 +116,10 @@
   $$('[data-open-menu]').forEach(function (b) { b.addEventListener('click', function () { open($('#menu')); }); });
   $$('[data-close]').forEach(function (b) { b.addEventListener('click', function () { close(b.closest('.search,.menu,.geo')); }); });
   $$('#menu nav a').forEach(function (a) { a.addEventListener('click', function () { close($('#menu')); }); });
-  $$('.search__list li').forEach(function (li) { li.addEventListener('click', function () { $('#search input').value = li.textContent; }); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') $$('.search,.menu').forEach(close); });
 
   /* ---- read more ---- */
-  $('.seo__btn').addEventListener('click', function () {
+  var seoBtn = $('.seo__btn'); if (seoBtn) seoBtn.addEventListener('click', function () {
     var m = $('.seo__more'); m.hidden = !m.hidden;
     this.classList.toggle('open', !m.hidden);
     this.firstChild.nodeValue = m.hidden ? 'Read more ' : 'Show less ';
@@ -131,9 +132,9 @@
     store.set('bereke-city', id);
     $$('[data-city-name]').forEach(function (el) { el.textContent = c.name; });
     var n = $('[data-count-city]');
-    n.setAttribute('data-to', c.stores);
-    n.textContent = c.stores;
-    $('[data-xp-city]').textContent = c.xpress;
+    if (n) { n.setAttribute('data-to', c.stores); n.textContent = c.stores; }
+    var xp = $('[data-xp-city]'); if (xp) xp.textContent = c.xpress;
+    document.dispatchEvent(new CustomEvent('bereke:city', { detail: id }));
   }
   function locate() {
     open(geo);
@@ -147,13 +148,39 @@
     var k = 0, note = $('.geo__note', geo);
     note.textContent = notes[0];
     var nt = setInterval(function () { k++; if (notes[k]) note.textContent = notes[k]; }, 1000);
-    setTimeout(function () {
+    var t0 = Date.now(), done = false;
+    function fail(why) {
+      if (done) return; done = true;
+      setTimeout(function () {
+        clearInterval(nt);
+        geo.classList.add('is-err');
+        $('.geo__err', geo).lastChild.nodeValue = ' ' + (why === 'far' ? 'No Bereke near you' : 'Location not found');
+        $('.geo__step--err p:not(.geo__err)', geo).textContent = why === 'far' ? 'There is no Bereke store near you. Choose your city and we will show you its prices and stores.' : 'We could not work out where you are. Choose your city and we will show you its prices and stores.';
+        $('.geo__step--find', geo).hidden = true;
+        $('.geo__step--err', geo).hidden = false;
+        $('.geo__cities', geo).hidden = false;
+      }, Math.max(0, 2600 - (Date.now() - t0)));
+    }
+    function found(s, d) {
+      if (done) return; done = true;
       clearInterval(nt);
-      geo.classList.add('is-err');
-      $('.geo__step--find', geo).hidden = true;
-      $('.geo__step--err', geo).hidden = false;
-      $('.geo__cities', geo).hidden = false;
-    }, 3200);
+      note.textContent = 'Your nearest store: ' + s.n + ', ' + (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km');
+      setTimeout(function () { setCity(s.c); close(geo); }, 1600);
+    }
+    if (!navigator.geolocation) { fail(); return; }
+    navigator.geolocation.getCurrentPosition(function (p) {
+      fetch('data/stores.json').then(function (r) { return r.json(); }).then(function (S) {
+        var me = { lat: p.coords.latitude, lon: p.coords.longitude }, best = null, bd = 1e9;
+        S.forEach(function (s) { var d = dist(me, s); if (d < bd) { bd = d; best = s; } });
+        if (best && bd < 60) found(best, bd); else fail('far');
+      }).catch(function () { fail(); });
+    }, function () { fail(); }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
+    setTimeout(function () { fail(); }, 20000);
+  }
+  function dist(a, b) {
+    var r = Math.PI / 180, dLa = (b.lat - a.lat) * r, dLo = (b.lon - a.lon) * r;
+    var h = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2);
+    return 12742 * Math.asin(Math.sqrt(h));
   }
   $$('[data-city]').forEach(function (b) {
     b.addEventListener('click', function () { setCity(b.getAttribute('data-city')); close(geo); });

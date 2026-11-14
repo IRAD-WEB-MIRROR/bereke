@@ -5,15 +5,9 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   var STORES = {
-    'talas': { name: 'Talas', list: [
-      ['t01', 'Bereke Bazar-i Kalan'], ['t02', 'Bereke Vokzal'], ['t03', 'Bereke Vokzal-2'],
-      ['t04', 'Bereke Soviet Centre'], ['t05', 'Bereke At-Chabysh'], ['t06', 'Bereke Köchkön'],
-      ['t07', 'Bereke Western Corridor'], ['t08', 'Bereke Ak-Bosogo'], ['t09', 'Bereke Western Industrial'],
-      ['t10', 'Bereke Western Industrial-2'], ['t11', 'Bereke Northern Industrial']] },
-    'nurzhan': { name: 'Nurzhan', list: [
-      ['n01', 'Bereke Temir Jol'], ['n02', 'Bereke Central'], ['n03', 'Bereke Dastgoh'], ['n04', 'Bereke Dastgoh-2'],
-      ['n05', 'Bereke Botsad'], ['n06', 'Bereke Uzun-Aryk'], ['n07', 'Bereke Aeroport']] },
-    'iyik-janyl': { name: 'Iyık Janyl', list: [['i01', 'Bereke Lower Town'], ['i02', 'Bereke Cathedral Hill']] }
+    'talas': { name: 'Talas', list: [["t01", "Bereke At-Chabysh"], ["t02", "Bereke Köhne Diz"], ["t03", "Bereke At-Chabysh-2"], ["t04", "Bereke Ak-Bosogo"], ["t05", "Bereke Soviet Centre"], ["t06", "Bereke Bazar-i Kalan"], ["t07", "Bereke Vokzal"], ["t08", "Bereke Köhne Diz-2"], ["t09", "Bereke Vokzal-2"], ["t10", "Bereke Ak-Bosogo-2"], ["t11", "Bereke Köchkön"]] },
+    'nurzhan': { name: 'Nurzhan', list: [["n01", "Bereke Dastgoh"], ["n02", "Bereke Temir Jol"], ["n03", "Bereke Uzun-Aryk"], ["n04", "Bereke Dastgoh-2"], ["n05", "Bereke Central"], ["n06", "Bereke Uzun-Aryk-2"], ["n07", "Bereke Neftyanik"]] },
+    'iyik-janyl': { name: 'Iyık Janyl', list: [["j01", "Bereke Cathedral Hill"], ["j02", "Bereke Kara-Jar"]] }
   };
   var MAX = 30;
 
