@@ -41,14 +41,8 @@
         '<span class="price">' + (p.old ? '<s>' + p.old + '</s>' : '') + '<b>' + p.now + '</b><small>som</small></span>' +
         (p.off ? '<span class="off">−' + p.off + '%</span>' : '') + '</div>' +
         '<h3 class="card__name">' + p.name + '</h3><p class="card__unit">' + p.unit + '</p>' +
-        '<button type="button" class="card__buy">Add to list</button></article>';
+        '<button type="button" class="card__buy">Add to cart</button></article>';
     }).join('');
-  });
-  document.addEventListener('click', function (e) {
-    var b = e.target.closest('.card__buy');
-    if (!b) return;
-    b.classList.toggle('added');
-    b.textContent = b.classList.contains('added') ? 'On your list ✓' : 'Add to list';
   });
 
   /* ---- hero slider: shrink to an oval, swap, grow ---- */
