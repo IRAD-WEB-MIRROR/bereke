@@ -127,6 +127,15 @@
 
   /* ---- where are you? ---- */
   var geo = $('#geo');
+  function ck(k) { var m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); try { return m ? decodeURIComponent(m[1]) : null; } catch (e) { return null; } }
+  function sck(k, v, days) { document.cookie = k + '=' + encodeURIComponent(v) + '; max-age=' + (days * 86400) + '; path=/; SameSite=Lax'; }
+  function paintStore() {
+    var n = ck('bereke_store_name'), cn = CITIES[store.get('bereke-city')];
+    var pill = $('.hdr__city');
+    if (pill) pill.classList.toggle('has-store', !!n);
+    $$('[data-my-store]').forEach(function (el) { el.textContent = n || (cn ? cn.name : 'Choose city'); el.title = n || ''; });
+  }
+  document.addEventListener('bereke:mystore', paintStore);
   function setCity(id) {
     var c = CITIES[id]; if (!c) return;
     store.set('bereke-city', id);
@@ -134,7 +143,9 @@
     var n = $('[data-count-city]');
     if (n) { n.setAttribute('data-to', c.stores); n.textContent = c.stores; }
     var xp = $('[data-xp-city]'); if (xp) xp.textContent = c.xpress;
+    var sc = ck('bereke_store_city'); if (sc && sc !== id) { sck('bereke_store', '', 0); sck('bereke_store_name', '', 0); sck('bereke_store_city', '', 0); }
     document.dispatchEvent(new CustomEvent('bereke:city', { detail: id }));
+    paintStore();
   }
   function locate() {
     open(geo);
@@ -163,10 +174,13 @@
         $('.geo__cities', geo).hidden = false;
       }, Math.max(0, 2600 - (Date.now() - t0)));
     }
-    function found(s, d) {
+    function found(s, d, sup) {
       if (done) return; done = true;
       clearInterval(nt);
+      sck('bereke_store', s.id, 365); sck('bereke_store_name', s.n, 365); sck('bereke_store_city', s.c, 365);
+      if (sup) { sck('bereke_pickup', sup.id, 30); sck('bereke_pickup_city', sup.c, 30); }
       setCity(s.c);
+      document.dispatchEvent(new CustomEvent('bereke:store', { detail: { city: sup ? sup.c : s.c, pickup: sup ? sup.id : '' } }));
       setTimeout(function () {
         geo.classList.add('is-ok');
         $('#geo-h', geo).textContent = 'Found you!';
@@ -180,8 +194,9 @@
     navigator.geolocation.getCurrentPosition(function (p) {
       fetch('data/stores.json').then(function (r) { return r.json(); }).then(function (S) {
         var me = { lat: p.coords.latitude, lon: p.coords.longitude }, best = null, bd = 1e9;
-        S.forEach(function (s) { var d = dist(me, s); if (d < bd) { bd = d; best = s; } });
-        if (best) found(best, bd); else fail();
+        var sup = null, sd = 1e9;
+        S.forEach(function (s) { var d = dist(me, s); if (d < bd) { bd = d; best = s; } if (s.t === 's' && d < sd) { sd = d; sup = s; } });
+        if (best) found(best, bd, sup); else fail();
       }).catch(function () { fail(); });
     }, function () { fail(); }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
     setTimeout(function () { fail(); }, 20000);
@@ -203,5 +218,5 @@
   });
   var saved = store.get('bereke-city');
   if (saved && CITIES[saved]) setCity(saved);
-  else { setCity('talas'); store.set('bereke-city', ''); $$('[data-city-name]').forEach(function (el) { el.textContent = 'Choose city'; }); setTimeout(locate, 700); }
+  else { setCity('talas'); store.set('bereke-city', ''); $$('[data-city-name]').forEach(function (el) { el.textContent = 'Choose city'; }); paintStore(); setTimeout(locate, 700); }
 })();

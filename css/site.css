@@ -527,3 +527,6 @@ html.nosc{overflow:hidden}
 .zoom.on figure{transform:none;opacity:1}
 .zoom img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
 .zoom figcaption{margin-top:8px;font-weight:700;font-size:14px;text-align:center;color:var(--deep)}
+
+.hdr__my{display:flex;flex-direction:column;line-height:1.1;text-align:left}.hdr__my small{display:none;font-size:10px;font-weight:500;opacity:.8}.hdr__city.has-store .hdr__my small{display:block}.hdr__my span{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:760px){.hdr__my span{max-width:84px}.hdr__city.has-store .hdr__my small{display:none}}

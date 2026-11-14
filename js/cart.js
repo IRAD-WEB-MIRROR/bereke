@@ -131,7 +131,19 @@
     if (cart[i][4] < 1) cart.splice(i, 1);
     save(); render();
   });
-  $('.cartd__store', d).addEventListener('change', function () { storeId = this.value; setCookie('bereke_pickup', storeId, 30); var al = $('.cartd__alert', d); if (al) al.textContent = ''; });
+  document.addEventListener('bereke:store', function (e) {
+    if (STORES[e.detail.city]) city = e.detail.city;
+    storeId = e.detail.pickup || storeId;
+    if (!d.hidden) renderCities();
+  });
+  $('.cartd__store', d).addEventListener('change', function () {
+    storeId = this.value; setCookie('bereke_pickup', storeId, 30);
+    if (storeId) {
+      var o = this.options[this.selectedIndex];
+      setCookie('bereke_store', storeId, 365); setCookie('bereke_store_name', o.textContent, 365); setCookie('bereke_store_city', city, 365);
+      try { localStorage.setItem('bereke-city', city); } catch (er) {}
+      document.dispatchEvent(new CustomEvent('bereke:mystore'));
+    } var al = $('.cartd__alert', d); if (al) al.textContent = ''; });
 
   function alertMsg(t) {
     var a = $('.cartd__alert', d) || (function () { var p = document.createElement('p'); p.className = 'cartd__alert'; $('.cartd__foot', d).insertBefore(p, $('.cartd__go', d)); return p; })();
