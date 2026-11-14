@@ -523,7 +523,7 @@ html.nosc{overflow:hidden}
 .card__img:not(.card__img--none) img{cursor:zoom-in}
 .zoom{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(40,8,12,0);cursor:zoom-out;transition:background .22s}
 .zoom.on{background:rgba(40,8,12,.35)}
-.zoom figure{margin:0;background:#fff;border-radius:16px;padding:10px 10px 12px;box-shadow:0 24px 60px rgba(0,0,0,.3);transform:scale(.67);opacity:0;transition:transform .25s var(--ease),opacity .2s}
+.zoom figure{margin:0;background:#fff;border-radius:16px;padding:10px 10px 12px;box-shadow:0 24px 60px rgba(0,0,0,.3);transform:scale(.5);opacity:0;transition:transform .25s var(--ease),opacity .2s}
 .zoom.on figure{transform:none;opacity:1}
 .zoom img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
 .zoom figcaption{margin-top:8px;font-weight:700;font-size:14px;text-align:center;color:var(--deep)}

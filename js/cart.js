@@ -225,7 +225,7 @@
   render();
 })();
 
-/* Product photo zoom: click a photo to see it at 150%, click again or press Esc to close. */
+/* Product photo zoom: click a photo to see it at 200%, click again or press Esc to close. */
 (function () {
   'use strict';
   var z = null;
@@ -233,7 +233,7 @@
   document.addEventListener('click', function (e) {
     var img = e.target.closest && e.target.closest('.card__img:not(.card__img--none) img');
     if (!img) { if (z && e.target.closest('.zoom')) shut(); return; }
-    var r = img.getBoundingClientRect(), w = Math.min(r.width * 1.5, innerWidth - 32, innerHeight - 120);
+    var r = img.getBoundingClientRect(), w = Math.min(r.width * 2, innerWidth - 32, innerHeight - 120);
     var card = img.closest('.card'), name = card && card.querySelector('.card__name');
     z = document.createElement('div'); z.className = 'zoom';
     z.innerHTML = '<figure style="width:' + Math.round(w) + 'px"><img src="' + img.getAttribute('src') + '" alt=""><figcaption></figcaption></figure>';
