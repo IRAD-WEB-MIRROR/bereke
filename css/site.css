@@ -514,3 +514,4 @@ html.nosc{overflow:hidden}
 @media (max-width:900px){.pg .cards--grid{grid-template-columns:repeat(3,1fr)}.facts{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.sf{grid-template-columns:1fr;grid-template-rows:46vh auto;height:auto}.sf__map{order:-1;height:46vh}.sf__side{border-right:0}.sf__list{overflow:visible}}
 @media (max-width:640px){.pg{padding-top:84px}.pg__h{font-size:30px}.pg .cards--grid{display:grid;grid-template-columns:repeat(2,1fr);margin:0 0 10px;padding:0;overflow:visible}.pg .card{flex:none}.cols--even,.jobs,.list24,.labels,.sf__ul{grid-template-columns:1fr}.xp-hero{flex-direction:column;align-items:flex-start}.xp-hero>img{width:140px}.osec{padding:22px}.osec h2{font-size:23px}}
 .pg a.pill,.pg p a.pill{color:#fff}
+.sf__ul b a{color:inherit}.sf__ul b a:hover{color:var(--red);text-decoration:underline}

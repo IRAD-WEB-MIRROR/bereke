@@ -164,7 +164,7 @@
     function found(s, d) {
       if (done) return; done = true;
       clearInterval(nt);
-      note.textContent = 'Your nearest store: ' + s.n + ', ' + (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km');
+      note.textContent = 'Your nearest store: ' + s.n + (d < 60 ? ', ' + (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km') : ', ' + s.cn);
       setTimeout(function () { setCity(s.c); close(geo); }, 1600);
     }
     if (!navigator.geolocation) { fail(); return; }
@@ -172,7 +172,7 @@
       fetch('data/stores.json').then(function (r) { return r.json(); }).then(function (S) {
         var me = { lat: p.coords.latitude, lon: p.coords.longitude }, best = null, bd = 1e9;
         S.forEach(function (s) { var d = dist(me, s); if (d < bd) { bd = d; best = s; } });
-        if (best && bd < 60) found(best, bd); else fail('far');
+        if (best) found(best, bd); else fail();
       }).catch(function () { fail(); });
     }, function () { fail(); }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
     setTimeout(function () { fail(); }, 20000);
