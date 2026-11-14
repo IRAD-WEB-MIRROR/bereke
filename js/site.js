@@ -138,7 +138,9 @@
   }
   function locate() {
     open(geo);
-    geo.classList.remove('is-err');
+    geo.classList.remove('is-err', 'is-ok');
+    $('#geo-h', geo).textContent = 'Where are you?';
+    $('.geo__step--ok', geo).hidden = true;
     $('.geo__step--find', geo).hidden = false;
     $('.geo__step--err', geo).hidden = true;
     $('.geo__cities', geo).hidden = true;
@@ -164,8 +166,15 @@
     function found(s, d) {
       if (done) return; done = true;
       clearInterval(nt);
-      note.textContent = 'Your nearest store: ' + s.n + (d < 60 ? ', ' + (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km') : ', ' + s.cn);
-      setTimeout(function () { setCity(s.c); close(geo); }, 1600);
+      setCity(s.c);
+      setTimeout(function () {
+        geo.classList.add('is-ok');
+        $('#geo-h', geo).textContent = 'Found you!';
+        $('.geo__store b', geo).textContent = s.n;
+        $('.geo__store span', geo).textContent = s.q + ', ' + s.cn + ' · ' + far(d) + ' away · ' + s.h;
+        $('.geo__step--find', geo).hidden = true;
+        $('.geo__step--ok', geo).hidden = false;
+      }, Math.max(0, 2600 - (Date.now() - t0)));
     }
     if (!navigator.geolocation) { fail(); return; }
     navigator.geolocation.getCurrentPosition(function (p) {
@@ -177,6 +186,10 @@
     }, function () { fail(); }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 });
     setTimeout(function () { fail(); }, 20000);
   }
+  function far(d) {
+    return d < 1 ? Math.round(d * 1000) + ' m' : d < 10 ? d.toFixed(1) + ' km' : Math.round(d).toLocaleString('en-GB') + ' km';
+  }
+  if ($('.geo__ok', geo)) $('.geo__ok', geo).addEventListener('click', function () { close(geo); });
   function dist(a, b) {
     var r = Math.PI / 180, dLa = (b.lat - a.lat) * r, dLo = (b.lon - a.lon) * r;
     var h = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2);

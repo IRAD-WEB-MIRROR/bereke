@@ -12,9 +12,10 @@
     var h = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) * Math.sin(dLo / 2);
     return 12742 * Math.asin(Math.sqrt(h));
   }
+  function far(d) { return d < 1 ? Math.round(d * 1000) + ' m' : d < 10 ? d.toFixed(1) + ' km' : Math.round(d).toLocaleString('en-GB') + ' km'; }
   function row(s) {
     return '<li id="' + s.id + '" class="st-' + s.t + '"><i></i><b><a href="https://biz.attelkom.net/p/' + esc(s.k) + '.html" title="Reviews and map on Attelkom Biznes">' + esc(s.n) + '</a></b>' +
-      '<em>' + (here && km(here, s) < 60 ? km(here, s).toFixed(1) + ' km' : s.h24 ? '24 saat' : '') + '</em>' +
+      '<em>' + (here ? far(km(here, s)) : s.h24 ? '24 saat' : '') + '</em>' +
       '<small>' + (s.t === 's' ? 'Supermarket' : 'Bereke Xpress') + ' · ' + esc(s.h) + '</small></li>';
   }
   function list() {
@@ -59,7 +60,7 @@
     navigator.geolocation.getCurrentPosition(function (p) {
       var me = { lat: p.coords.latitude, lon: p.coords.longitude };
       var best = S.slice().sort(function (a, b) { return km(me, a) - km(me, b); })[0], d = km(me, best);
-      here = me; msg('Nearest first. Your nearest store is ' + best.n + (d < 60 ? ', ' + (d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1) + ' km') + ' away.' : ' in ' + best.cn + '.'));
+      here = me; msg('Nearest first. Your nearest store is ' + best.n + ' in ' + best.cn + ', ' + far(d) + ' away.');
       setCity(best.c);
     }, function () {
       msg('We could not get your location. Allow location in your browser, or choose your city above.');
