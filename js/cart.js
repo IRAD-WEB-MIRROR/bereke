@@ -224,3 +224,22 @@
   }); mo.observe(document.body, { childList: true, subtree: true }); }
   render();
 })();
+
+/* Product photo zoom: click a photo to see it at 150%, click again or press Esc to close. */
+(function () {
+  'use strict';
+  var z = null;
+  function shut() { if (!z) return; var o = z; z = null; o.classList.remove('on'); setTimeout(function () { o.remove(); }, 220); }
+  document.addEventListener('click', function (e) {
+    var img = e.target.closest && e.target.closest('.card__img:not(.card__img--none) img');
+    if (!img) { if (z && e.target.closest('.zoom')) shut(); return; }
+    var r = img.getBoundingClientRect(), w = Math.min(r.width * 1.5, innerWidth - 32, innerHeight - 120);
+    var card = img.closest('.card'), name = card && card.querySelector('.card__name');
+    z = document.createElement('div'); z.className = 'zoom';
+    z.innerHTML = '<figure style="width:' + Math.round(w) + 'px"><img src="' + img.getAttribute('src') + '" alt=""><figcaption></figcaption></figure>';
+    if (name) z.querySelector('figcaption').textContent = name.textContent;
+    document.body.appendChild(z); void z.offsetWidth; z.classList.add('on');
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') shut(); });
+  addEventListener('scroll', shut, { passive: true });
+})();
