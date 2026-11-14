@@ -16,19 +16,18 @@
   var WEEK = '10–16 Nov';
   var PRODUCTS = {
     week: [
-      { img: 'p_pomegranates', name: 'Pomegranates, loose', unit: '1 kg', old: '6.80', now: '5.90', off: 13 },
+      { img: 'p_pomegranates', name: 'Pomegranates', unit: '1 kg', old: '6.80', now: '5.90', off: 13 },
       { img: 'p_apples', name: 'Chu valley apples, red', unit: '1 kg', old: '3.90', now: '3.40', off: 13 },
       { img: 'p_beef', name: 'Beef rib steak, fresh', unit: '1 kg', now: '52.00' },
-      { img: 'p_water', name: 'Altyn-Bulak mineral water, glass', unit: '0.5 l', now: '1.20' },
-      { img: 'p_oil', name: 'Sunflower oil, refined', unit: '3 l', old: '31.40', now: '27.90', off: 11 }
+      { img: 'p_c_altynbulak_glass', name: 'Altyn-Bulak mineral water, glass', unit: '0.5 l', now: '1.20' },
+      { img: 'p_ts_kefir', name: 'Talas Süt kefir 2.5%', unit: '1 l', old: '4.50', now: '4.10', off: 9 }
     ],
     plov: [
-      { img: 'p_rice', name: 'Devzira rice, red', unit: '1 kg', old: '16.20', now: '14.50', off: 10 },
-      { img: 'p_onions', name: 'Onions and yellow carrots', unit: '1 kg', now: '1.60' },
-      { img: 'p_tomatoes', name: 'Tomatoes on the vine', unit: '1 kg', old: '8.10', now: '7.20', off: 11 },
-      { img: 'p_bread', name: 'Şaar nanı, Talas Nan', unit: '600 g', now: '3.50' },
-      { img: 'p_kefir', name: 'Talas Süt kefir 2.5%', unit: '2 l', old: '8.20', now: '7.40', off: 10 }
-    ]
+      { img: 'p_c_devzira', name: 'Devzira rice, red', unit: '1 kg', old: '16.20', now: '14.50', off: 10 },
+      { img: 'p_carrots', name: 'Yellow carrots, loose', unit: '1 kg', old: '1.90', now: '1.40', off: 26 },
+      { img: 'p_c_onions', name: 'Onions, loose', unit: '1 kg', old: '1.60', now: '1.20', off: 25 },
+      { img: 'p_c_tilla_sun', name: 'Tilla Kungaboqar sunflower oil', unit: '3 l', old: '31.40', now: '27.90', off: 11 },
+      { img: 'p_c_saar_nan', name: 'Şaar nanı tin loaf', unit: '600 g', now: '3.50' }]
   };
 
   /* ---- product cards ---- */

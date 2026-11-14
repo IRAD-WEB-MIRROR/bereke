@@ -408,3 +408,21 @@ html.nosc{overflow:hidden}
 .acct__alt{font-size:13px;text-align:center;margin:12px 0 0;color:var(--muted)}
 .acct__alt a{color:var(--red);font-weight:600}
 .cartd[hidden],.acct[hidden],.acct__f[hidden]{display:none}
+
+.card__buy.added{display:flex;align-items:center;justify-content:space-between;padding:0 4px;cursor:default}
+.card__buy.added:hover{background:var(--leaf)}
+.card__buy .qb{width:30px;height:28px;display:grid;place-items:center;border-radius:999px;font-size:18px;line-height:1;cursor:pointer;transition:background .15s}
+.card__buy .qb:hover{background:rgba(255,255,255,.22)}
+.card__buy .qn{font-weight:700;font-size:14px}
+
+.offer__top{position:relative;padding:10px 12px 0;align-items:stretch}
+.offer__pics{display:flex;align-items:flex-end;justify-content:center;width:100%;pointer-events:none}
+.offer__pics img{flex:0 1 auto;min-width:0;max-width:40%;height:auto;max-height:150px;margin:0 2px;object-fit:contain;object-position:50% 100%;mix-blend-mode:multiply;filter:brightness(1.06) contrast(1.03);transition:transform .5s var(--ease)}
+.offer__pics img:nth-child(2){transform:scale(1.08);transform-origin:50% 100%}
+.offer:hover .offer__pics img{transform:translateY(-5px)}
+.offer:hover .offer__pics img:nth-child(2){transform:translateY(-5px) scale(1.08)}
+.offer--yellow .offer__top{background:#fff}
+.offer__top{flex:1.5;padding:16px 14px 6px}
+.offer__pics{align-items:flex-end;height:100%}
+.offer__pics img:nth-child(2){max-height:165px}
+.offer--yellow .offer__pics img{max-width:50%;margin:0 -7%}

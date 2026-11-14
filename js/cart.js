@@ -100,7 +100,9 @@
       var b = $('.card__buy', c); if (!b) return;
       var k = find(txt(c, '.card__name'), txt(c, '.card__unit'));
       b.classList.toggle('added', k > -1);
-      b.textContent = k > -1 ? 'In cart · ' + cart[k][4] : 'Add to cart';
+      if (k > -1) b.innerHTML = '<span class="qb" data-bdec aria-label="One less">−</span><span class="qn">' + cart[k][4] + '</span><span class="qb" data-binc aria-label="One more">+</span>';
+      else b.textContent = 'Add to cart';
+      b.setAttribute('aria-label', k > -1 ? cart[k][4] + ' in cart' : 'Add to cart');
     });
   }
   function txt(c, s) { var e = $(s, c); return e ? e.textContent.trim() : ''; }
@@ -116,7 +118,11 @@
       var pb = $('.price b', c), img = $('.card__img img', c);
       var src = img ? (img.getAttribute('src') || '') : '', m = src.match(/photos\/([^/]+)\.jpg$/);
       var k = find(n, u);
-      if (k > -1) cart[k][4] = Math.min(cart[k][4] + 1, 99);
+      if (k > -1) {
+        if (e.target.closest('[data-bdec]')) { cart[k][4]--; if (cart[k][4] < 1) cart.splice(k, 1); save(); render(); return; }
+        if (!e.target.closest('[data-binc]')) return;
+        cart[k][4] = Math.min(cart[k][4] + 1, 99);
+      }
       else { if (cart.length >= MAX) { alertMsg('Your cart holds up to ' + MAX + ' different products.'); return; } cart.push([n, u, pb ? pb.textContent.trim() : '0', m ? m[1] : '', 1]); }
       save(); render();
       hb.classList.remove('bump'); void hb.offsetWidth; hb.classList.add('bump');
@@ -216,6 +222,11 @@
   fup.elements.em.addEventListener('input', function () { this.classList.remove('bad'); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!a.hidden) a.hidden = true; else if (!d.hidden) close(); } });
 
-  var mo, tm; if (window.MutationObserver) { mo = new MutationObserver(function () { clearTimeout(tm); tm = setTimeout(render, 30); }); mo.observe(document.body, { childList: true, subtree: true }); }
+  var mo, tm; if (window.MutationObserver) { mo = new MutationObserver(function (ms) {
+    for (var i = 0; i < ms.length; i++) for (var j = 0; j < ms[i].addedNodes.length; j++) {
+      var nd = ms[i].addedNodes[j];
+      if (nd.nodeType === 1 && (nd.classList.contains('card') || nd.querySelector('.card'))) { clearTimeout(tm); tm = setTimeout(render, 30); return; }
+    }
+  }); mo.observe(document.body, { childList: true, subtree: true }); }
   render();
 })();
